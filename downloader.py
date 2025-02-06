@@ -7,7 +7,6 @@ from cbz.constants import PageType, YesNo, Manga, AgeRating, Format
 from cbz.page import PageInfo
 from cbz.player import PARENT
 from rich.console import Console
-from rich.progress import track
 
 from utils import request, config
 from utils.log import log
@@ -16,6 +15,9 @@ console = Console()
 
 
 def download(url, filename):
+    if os.path.exists(filename):
+        console.print(f"[bold yellow]检测到已下载{filename}，跳过[/]")
+        return
     log.info(f"开始下载图片，URL：{url}，路径：{filename}")
     response = request.get(url)
     if not response:
@@ -44,7 +46,6 @@ def after_download(title, episode):
             title=title,
             series=title,
             language_iso='zh',
-            number=episode,
             format=Format.WEB_COMIC,
             black_white=YesNo.NO,
             manga=Manga.YES,
@@ -81,15 +82,14 @@ def downloader(list):
         log.info(f"获取帖子信息成功，ID：{id}，返回：{response.content}")
         data = response.json()['Variables']['postlist'][0]
 
-        for i in track(range(len(data["imagelist"])),
-                       description=f"[bold yellow]正在下载:[{title}]{episode}(帖子ID:{id})"):
-            # 组成下载路径
-            rstr = r"[\/\\\:\*\?\"\<\>\|]"  # '/ \ : * ? " < > |'
-            episode = re.sub(rstr, "_", episode)  # 替换为下划线
-            save_path = f"{config.DOWNLOAD_PATH}/{title}/{episode}"
-            if not os.path.exists(save_path):
-                os.makedirs(save_path)
-            # 解析API返回数据
+        # 组成下载路径
+        rstr = r"[\/\\\:\*\?\"\<\>\|]"  # '/ \ : * ? " < > |'
+        episode = re.sub(rstr, "_", episode)  # 替换为下划线
+        save_path = f"{config.DOWNLOAD_PATH}/{title}/{episode}"
+        if not os.path.exists(save_path):
+            os.makedirs(save_path)
+        # 解析API返回数据
+        with console.status(f"[bold yellow]正在下载:[{title}]{episode}(帖子ID:{id})[/]") as status:
             for index, image_key in enumerate(data["imagelist"], start=1):
                 attachment_url = data["attachments"].get(image_key, {}).get("attachment")
                 filename = f"{save_path}/{str(index).zfill(4)}.jpg"
