@@ -1,14 +1,12 @@
 import re
-
-import requests
-from bs4 import BeautifulSoup
 import time
-import json
+
+from bs4 import BeautifulSoup
 from rich.console import Console
 from rich.prompt import Prompt
 from rich.table import Table
 
-from log import log
+from utils.log import log
 from utils import request
 
 console = Console()
@@ -178,6 +176,7 @@ def get_selected_data(results, selected_numbers):
     ]
     return selected_data
 
+
 def search():
     keyword = Prompt.ask("请输入搜索关键词")
     search_url = perform_search(keyword)
@@ -189,17 +188,18 @@ def search():
             get_results = normalize_titles(results)  # 处理标题
             console.rule(f"[bold blue]漫画列表[/bold blue]")
             display_results(get_results)  # 显示处理后结果
-
+            # Todo 支持一键选择
             selected_numbers = Prompt.ask(
-                "请选择要提取的条目（输入A全选，用逗号分隔或范围，例如 1-5,8,10-12）"
+                "请选择要提取的条目（用逗号分隔或范围，例如 1-5,8,10-12）"
             )
             selected_numbers = parse_selection(selected_numbers)
 
             selected_data = get_selected_data(get_results, selected_numbers)
-            print("\n===== 最终选择的条目 =====")
-            console.print(json.dumps(selected_data, ensure_ascii=False, indent=4))
+            log.info(f"用户选择列表：{selected_data}")
+            return selected_data
     else:
         console.print("[red]未找到搜索结果。[/red]")
+        return None
 
 
 if __name__ == "__main__":

@@ -1,16 +1,28 @@
-# 这是一个示例 Python 脚本。
 
-# 按 Shift+F10 执行或将其替换为您的代码。
-# 按 双击 Shift 在所有地方搜索类、文件、工具窗口、操作和设置。
+from rich.console import Console
+
+from downloader import downloader
+from search import search
+from utils import config
+from utils.log import log
+
+console = Console()
 
 
-def print_hi(name):
-    # 在下面的代码行中使用断点来调试脚本。
-    print(f'Hi, {name}')  # 按 Ctrl+F8 切换断点。
+def main():
+    log.info("qwq")
+    print(config.DEBUG)
+    console.print(
+        "[bold green]感谢使用[/bold green][bold yellow]yamibo-downloader[/bold yellow][bold green]！如果可以能去仓库点个:glowing_star:吗qwq[/bold green]")
+    if not config.COOKIE or not config.DOWNLOAD_PATH:
+        console.print("[bold red]请检查.env文件，及根据github中的README进行配置[/bold red]")
+        exit(1)
+    # Todo 支持直接输入帖子ID进行下载
+    list = search()
+    if not list:
+        exit(1)
+    downloader(list)
 
 
-# 按装订区域中的绿色按钮以运行脚本。
 if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# 访问 https://www.jetbrains.com/help/pycharm/ 获取 PyCharm 帮助
+    main()

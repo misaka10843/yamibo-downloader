@@ -2,13 +2,15 @@
 > **因为尽可能缓解copymanga服务器压力，此程序限制了每分钟只能访问15次API，还请理解！**
 >
 > **我并不希望此工具影响到百合会的运行，所以此下载器比其他本人编写的下载器更加的难用(绝对不是自己懒)，**
-> 
+>
 > **请不要自行改写本下载器/使用本下载器原理制作其他类型下载器而不添加API请求限制！**
-> 
-> **对于使用绝大部份的第三方小网站的下载器都是同理，服务器流量真的很贵，如果为了用户体验可能还会套上cdn会更贵，如果爬虫泛滥可能还会用Cloudflare等手段阻止爬虫。**
+>
+> **对于使用绝大部份的第三方小网站的下载器都是同理，服务器流量真的很贵，如果为了用户体验可能还会套上cdn会更贵，如果爬虫泛滥可能还会用Cloudflare等手段阻止爬虫。
+**
 
 # yamibo-downloader
- 百合会论坛漫画下载器(WIP)
+
+百合会论坛漫画下载器(WIP)
 
 ## 前排提醒
 
@@ -35,3 +37,21 @@
 而在PC端上也存在着类似问题
 
 为了缓解百合会服务器压力（我一话多看几遍（去缓存）的话还不如下载一遍本地来看（bushi）），以及方便下载漫画而制作本下载器
+
+## 如何使用
+
+可以前往[releases](https://github.com/misaka10843/yamibo-downloader/releases)下载各个平台的打包程序
+
+然后将[.env.example](https://github.com/misaka10843/yamibo-downloader/blob/main/.env.example)重命名为`.env`并放在程序的同级目录下
+
+修改`.env`文件，其中对应关系如下：
+
+```dotenv
+COOKIE="" #百合会的cookie字段
+DOWNLOAD_PATH="" #下载的保存路径
+PACKAGED_CBZ=False/True #是否打包成CBZ，如果打包
+KEEP_IMAGE=False/True #在打包CBZ为True是否保存原文件？
+CBZ_PATH="" #CBZ保存路径
+```
+
+打开cmd并cd进程序的同级目录下运行`./yamibo-downloader`即可

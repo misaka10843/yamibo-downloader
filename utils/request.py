@@ -1,8 +1,10 @@
 import time
 
 import requests
+
+from utils.log import log
 from utils import config
-from log import log
+from utils.function import api_restriction
 
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 Edg/132.0.0.0",
@@ -29,6 +31,7 @@ class RequestHandler:
                 response = self.session.request(method, url, timeout=self.timeout, **kwargs)
 
                 if 200 <= response.status_code <= 302:
+                    api_restriction()
                     return response
 
                 log.warning(
