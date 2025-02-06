@@ -55,3 +55,17 @@ CBZ_PATH="" #CBZ保存路径
 ```
 
 打开cmd并cd进程序的同级目录下运行`./yamibo-downloader`即可
+
+## 一些截图
+
+搜索界面：
+
+![image](https://github.com/user-attachments/assets/91e0d7db-9d6d-4b88-b57c-5b0b43aceec1)
+
+漫画选择界面：
+
+![image](https://github.com/user-attachments/assets/3d79a517-b0c8-44a0-a08d-f85068230b23)
+
+下载界面：
+
+![image](https://github.com/user-attachments/assets/5acd9a61-3670-4b67-9983-31264de9aaa7)
