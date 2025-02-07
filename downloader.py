@@ -1,5 +1,7 @@
 import os
+import random
 import re
+import time
 from pathlib import Path
 
 from cbz.comic import ComicInfo
@@ -7,25 +9,33 @@ from cbz.constants import PageType, YesNo, Manga, AgeRating, Format
 from cbz.page import PageInfo
 from cbz.player import PARENT
 from rich.console import Console
+from rich.progress import Progress, TextColumn, BarColumn, TaskProgressColumn, MofNCompleteColumn, \
+    TimeRemainingColumn
 
 from utils import request, config
 from utils.log import log
 
 console = Console()
 
+fail_list = []
+
 
 def download(url, filename):
     if os.path.exists(filename):
-        console.print(f"[bold yellow]检测到已下载{filename}，跳过[/]")
+        console.print(f"[bold bright_black]检测到已下载{filename}，跳过[/]")
         return
     log.info(f"开始下载图片，URL：{url}，路径：{filename}")
     response = request.get(url)
     if not response:
         log.error(f"图片下载失败，URL：{url}")
-        console.print(f"[bold red]无法下载{filename}，请稍后手动下载对应章节(章节话数为每话下载输出的帖子ID)[/]")
+        console.print(f"[bold red]无法下载{filename}，以将此图片保存至重试列表以供稍后重新下载，如还无法下载请手动下载对应章节(章节话数为每话下载输出的帖子ID)[/]")
+        fail_list.append({'url': url, 'filename': filename})
         return
     with open(filename, "wb") as f:
         f.write(response.content)
+    # 防止速率过高导致临时403
+    sleep_time = random.randint(3, 5)
+    time.sleep(sleep_time)
 
 
 def after_download(title, episode):
@@ -67,6 +77,7 @@ def after_download(title, episode):
 
 
 def downloader(list):
+    global fail_list
     for item in list:
         title = item["title"]
         episode = item["episode"]
@@ -89,11 +100,31 @@ def downloader(list):
         if not os.path.exists(save_path):
             os.makedirs(save_path)
         # 解析API返回数据
-        with console.status(f"[bold yellow]正在下载:[{title}]{episode}(帖子ID:{id})[/]") as status:
-            for index, image_key in enumerate(data["imagelist"], start=1):
+        progress = Progress(
+            TextColumn("[progress.description]{task.description}"),
+            BarColumn(),
+            TaskProgressColumn(),
+            MofNCompleteColumn(),
+            TimeRemainingColumn(),
+        )
+        with progress:
+            for index, image_key in progress.track(enumerate(data["imagelist"], start=1), total=len(data["imagelist"]),
+                                                   description=
+                                                   f"[bold pink]正在下载:[{title}]{episode}(帖子ID:{id})[/]"):
                 attachment_url = data["attachments"].get(image_key, {}).get("attachment")
                 filename = f"{save_path}/{str(index).zfill(4)}.jpg"
                 url = f"https://bbs.yamibo.com/data/attachment/forum/{attachment_url}"
                 download(url, filename)
+        if len(fail_list) > 0:
+            console.print("[bold yellow]检测到有图片下载失败，正在等待10秒之后重新尝试下载[/]")
+            log.info(f"下列图片下载失败：{fail_list}")
+            time.sleep(10)
+            with progress:
+                for index in progress.track(fail_list,
+                                                       total=len(fail_list),
+                                                       description=
+                                                       f"[bold pink]正在重新下载:[{title}]{episode}(帖子ID:{id}) 的无法下载的图片[/]"):
+                    download(index['url'], index['filename'])
+            fail_list = []
         with console.status("[bold green]正在运行下载后程序中...") as status:
             after_download(title, episode)

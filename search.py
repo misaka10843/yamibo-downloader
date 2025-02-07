@@ -6,8 +6,8 @@ from rich.console import Console
 from rich.prompt import Prompt
 from rich.table import Table
 
-from utils.log import log
 from utils import request
+from utils.log import log
 
 console = Console()
 

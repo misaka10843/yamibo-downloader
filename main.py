@@ -1,4 +1,3 @@
-
 from rich.console import Console
 
 from downloader import downloader
