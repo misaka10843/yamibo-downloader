@@ -41,40 +41,40 @@ def download(url, filename):
 
 def after_download(title, episode):
     if config.PACKAGED_CBZ:
-        with console.status("[bold green]开始打包cbz[/bold green]"):
-            path = f"{config.DOWNLOAD_PATH}/{title}/{episode}/"
-            paths = list(Path(path).iterdir())
-            pages = [
-                PageInfo.load(
-                    path=path,
-                    type=PageType.FRONT_COVER if i == 0 else PageType.STORY
-                )
-                for i, path in enumerate(paths)
-            ]
-
-            comic = ComicInfo.from_pages(
-                pages=pages,
-                title=title,
-                series=title,
-                language_iso='zh',
-                format=Format.WEB_COMIC,
-                black_white=YesNo.NO,
-                manga=Manga.YES,
-                age_rating=AgeRating.PENDING
+        console.print("[bold green]开始打包cbz[/bold green]")
+        path = f"{config.DOWNLOAD_PATH}/{title}/{episode}/"
+        paths = list(Path(path).iterdir())
+        pages = [
+            PageInfo.load(
+                path=path,
+                type=PageType.FRONT_COVER if i == 0 else PageType.STORY
             )
-            cbz_content = comic.pack()
-            if config.CBZ_PATH:
-                path = f"{config.CBZ_PATH}/{title}/"
-            else:
-                path = f"{config.DOWNLOAD_PATH}/{title}/"
-            if not os.path.exists(path):
-                os.makedirs(path)
-            cbz_path = PARENT / f'{path}/{episode}.cbz'
-            cbz_path.write_bytes(cbz_content)
+            for i, path in enumerate(paths)
+        ]
 
-            if not config.KEEP_IMAGE:
-                console.print("[bold green]开始删除原文件[/bold green]")
-                os.remove(f"{config.DOWNLOAD_PATH}/{title}/{episode}/")
+        comic = ComicInfo.from_pages(
+            pages=pages,
+            title=title,
+            series=title,
+            language_iso='zh',
+            format=Format.WEB_COMIC,
+            black_white=YesNo.NO,
+            manga=Manga.YES,
+            age_rating=AgeRating.PENDING
+        )
+        cbz_content = comic.pack()
+        if config.CBZ_PATH:
+            path = f"{config.CBZ_PATH}/{title}/"
+        else:
+            path = f"{config.DOWNLOAD_PATH}/{title}/"
+        if not os.path.exists(path):
+            os.makedirs(path)
+        cbz_path = PARENT / f'{path}/{episode}.cbz'
+        cbz_path.write_bytes(cbz_content)
+
+        if not config.KEEP_IMAGE:
+            console.print("[bold green]开始删除原文件[/bold green]")
+            os.remove(f"{config.DOWNLOAD_PATH}/{title}/{episode}/")
 
 
 def downloader(list):
