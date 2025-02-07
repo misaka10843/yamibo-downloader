@@ -28,7 +28,8 @@ def download(url, filename):
     response = request.get(url)
     if not response:
         log.error(f"图片下载失败，URL：{url}")
-        console.print(f"[bold red]无法下载{filename}，以将此图片保存至重试列表以供稍后重新下载，如还无法下载请手动下载对应章节(章节话数为每话下载输出的帖子ID)[/]")
+        console.print(
+            f"[bold red]无法下载{filename}，以将此图片保存至重试列表以供稍后重新下载，如还无法下载请手动下载对应章节(章节话数为每话下载输出的帖子ID)[/]")
         fail_list.append({'url': url, 'filename': filename})
         return
     with open(filename, "wb") as f:
@@ -109,6 +110,7 @@ def downloader(list):
         )
         with progress:
             for index, image_key in progress.track(enumerate(data["imagelist"], start=1), total=len(data["imagelist"]),
+                                                   update_period=0.5,
                                                    description=
                                                    f"[bold pink]正在下载:[{title}]{episode}(帖子ID:{id})[/]"):
                 attachment_url = data["attachments"].get(image_key, {}).get("attachment")
@@ -121,9 +123,9 @@ def downloader(list):
             time.sleep(10)
             with progress:
                 for index in progress.track(fail_list,
-                                                       total=len(fail_list),
-                                                       description=
-                                                       f"[bold pink]正在重新下载:[{title}]{episode}(帖子ID:{id}) 的无法下载的图片[/]"):
+                                            total=len(fail_list), update_period=0.5,
+                                            description=
+                                            f"[bold pink]正在重新下载:[{title}]{episode}(帖子ID:{id}) 的无法下载的图片[/]"):
                     download(index['url'], index['filename'])
             fail_list = []
         with console.status("[bold green]正在运行下载后程序中...") as status:
