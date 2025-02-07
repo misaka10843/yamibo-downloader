@@ -59,3 +59,5 @@ CBZ_PATH="" #CBZ保存路径
 下载界面：
 
 ![image](https://github.com/user-attachments/assets/5acd9a61-3670-4b67-9983-31264de9aaa7)
+![image](https://github.com/user-attachments/assets/f684d152-bccf-4f4a-9927-7d278a88475c)
+
