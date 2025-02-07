@@ -6,6 +6,16 @@
 
 并不适合下载小范围话数的情况（因为下载一话为了防止出错可能需要3-5分钟左右）
 
+## 功能
+
+- [x] 支持搜索
+- [x] 支持范围选择下载
+- [x] 支持定义漫画名称
+- [x] 支持过滤多个不同的译名帖子
+- [x] 支持重试下载
+- [ ] 支持指定ID下载
+- [ ] 支持使用tag进行搜索
+
 ## 前排提醒
 
 因为论坛的原因，无法用一种对用户很友好的方式类似漫画网站的章节列表形式进行下载
@@ -61,3 +71,6 @@ CBZ_PATH="" #CBZ保存路径
 ![image](https://github.com/user-attachments/assets/5acd9a61-3670-4b67-9983-31264de9aaa7)
 ![image](https://github.com/user-attachments/assets/f684d152-bccf-4f4a-9927-7d278a88475c)
 
+重试下载界面：
+
+![image](https://github.com/user-attachments/assets/d50675e0-540f-4603-a56a-ddfb9adfce09)
