@@ -10,7 +10,3 @@ DOWNLOAD_PATH = os.getenv("DOWNLOAD_PATH")
 PACKAGED_CBZ = os.getenv("PACKAGED_CBZ") or False
 KEEP_IMAGE = os.getenv("KEEP_IMAGE") or False
 CBZ_PATH = os.getenv("CBZ_PATH")
-DEBUG = os.getenv("DEBUG") or False
-LOGSAVE = os.getenv("LOGSAVE") or False
-
-API_COUNTER = 0
