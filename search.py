@@ -37,7 +37,7 @@ def perform_search(keyword):
         soup = BeautifulSoup(response.text, "html.parser")
         if soup.find("div", id="messagetext", class_="alert_info"):
             log.warning("10秒搜索限制触发，正在等待")
-            with console.status("[bold yellow]抱歉，您在 10 秒内只能进行一次搜索，正在等待中...") as status:
+            with console.status("[bold yellow]抱歉，您在 10 秒内只能进行一次搜索，正在等待中..."):
                 time.sleep(10)
             return perform_search(keyword)
 
@@ -58,7 +58,7 @@ def fetch_and_parse(search_url, page=1):
 
     if soup.find("div", id="messagetext", class_="alert_info"):
         log.warning("10秒搜索限制触发，正在等待")
-        with console.status("[bold yellow]抱歉，您在 10 秒内只能进行一次搜索，正在等待中...") as status:
+        with console.status("[bold yellow]抱歉，您在 10 秒内只能进行一次搜索，正在等待中..."):
             time.sleep(10)
         return fetch_and_parse(search_url, page)
 
@@ -104,7 +104,7 @@ def normalize_titles(results):
         "请输入在搜索结果中漫画的所有标题（多个用逗号分隔，此为过滤搜索结果）").strip().split(',')
     alternative_titles = [t.strip().lower() for t in alternative_titles if t.strip()]
 
-    with console.status("[bold green]正在处理搜索结果中...") as status:
+    with console.status("[bold green]正在处理搜索结果中..."):
         log.info("开始处理搜索结果")
         # 处理可能的标题变体
         title_variants = {base_title.lower()} | {t.strip().lower() for t in alternative_titles if t.strip()}
@@ -182,7 +182,7 @@ def search():
     search_url = perform_search(keyword)
 
     if search_url:
-        with console.status("[bold green]正在搜索中...") as status:
+        with console.status("[bold green]正在搜索中..."):
             results = fetch_all_pages(search_url)
         if results:
             get_results = normalize_titles(results)  # 处理标题

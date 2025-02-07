@@ -41,40 +41,40 @@ def download(url, filename):
 
 def after_download(title, episode):
     if config.PACKAGED_CBZ:
-        console.print("[bold green]开始打包cbz[/bold green]")
-        path = f"{config.DOWNLOAD_PATH}/{title}/{episode}/"
-        paths = list(Path(path).iterdir())
-        pages = [
-            PageInfo.load(
-                path=path,
-                type=PageType.FRONT_COVER if i == 0 else PageType.STORY
+        with console.status("[bold green]开始打包cbz[/bold green]"):
+            path = f"{config.DOWNLOAD_PATH}/{title}/{episode}/"
+            paths = list(Path(path).iterdir())
+            pages = [
+                PageInfo.load(
+                    path=path,
+                    type=PageType.FRONT_COVER if i == 0 else PageType.STORY
+                )
+                for i, path in enumerate(paths)
+            ]
+
+            comic = ComicInfo.from_pages(
+                pages=pages,
+                title=title,
+                series=title,
+                language_iso='zh',
+                format=Format.WEB_COMIC,
+                black_white=YesNo.NO,
+                manga=Manga.YES,
+                age_rating=AgeRating.PENDING
             )
-            for i, path in enumerate(paths)
-        ]
+            cbz_content = comic.pack()
+            if config.CBZ_PATH:
+                path = f"{config.CBZ_PATH}/{title}/"
+            else:
+                path = f"{config.DOWNLOAD_PATH}/{title}/"
+            if not os.path.exists(path):
+                os.makedirs(path)
+            cbz_path = PARENT / f'{path}/{episode}.cbz'
+            cbz_path.write_bytes(cbz_content)
 
-        comic = ComicInfo.from_pages(
-            pages=pages,
-            title=title,
-            series=title,
-            language_iso='zh',
-            format=Format.WEB_COMIC,
-            black_white=YesNo.NO,
-            manga=Manga.YES,
-            age_rating=AgeRating.PENDING
-        )
-        cbz_content = comic.pack()
-        if config.CBZ_PATH:
-            path = f"{config.CBZ_PATH}/{title}/"
-        else:
-            path = f"{config.DOWNLOAD_PATH}/{title}/"
-        if not os.path.exists(path):
-            os.makedirs(path)
-        cbz_path = PARENT / f'{path}/{episode}.cbz'
-        cbz_path.write_bytes(cbz_content)
-
-        if not config.KEEP_IMAGE:
-            console.print("[bold green]开始删除原文件[/bold green]")
-            os.remove(f"{config.DOWNLOAD_PATH}/{title}/{episode}/")
+            if not config.KEEP_IMAGE:
+                console.print("[bold green]开始删除原文件[/bold green]")
+                os.remove(f"{config.DOWNLOAD_PATH}/{title}/{episode}/")
 
 
 def downloader(list):
@@ -128,5 +128,5 @@ def downloader(list):
                                             f"[bold pink]正在重新下载:[{title}]{episode}(帖子ID:{id}) 的无法下载的图片[/]"):
                     download(index['url'], index['filename'])
             fail_list = []
-        with console.status("[bold green]正在运行下载后程序中...") as status:
+        with console.status("[bold green]正在运行下载后程序中..."):
             after_download(title, episode)

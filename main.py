@@ -3,14 +3,11 @@ from rich.console import Console
 from downloader import downloader
 from search import search
 from utils import config
-from utils.log import log
 
 console = Console()
 
 
 def main():
-    log.info("qwq")
-    print(config.DEBUG)
     console.print(
         "[bold green]感谢使用[/bold green][bold yellow]yamibo-downloader[/bold yellow][bold green]！如果可以能去仓库点个:glowing_star:吗qwq[/bold green]")
     if not config.COOKIE or not config.DOWNLOAD_PATH:
