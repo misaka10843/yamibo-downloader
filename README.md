@@ -74,3 +74,23 @@ CBZ_PATH="" #CBZ保存路径
 重试下载界面：
 
 ![image](https://github.com/user-attachments/assets/d50675e0-540f-4603-a56a-ddfb9adfce09)
+
+## 提示
+
+在一些场景下，可能漫画的译名有多个，如此图
+
+![image](https://github.com/user-attachments/assets/248d39d7-29b7-4750-82fd-a4f11f1e462c)
+
+那么搜索时就应该搜索相同关键词
+
+![image](https://github.com/user-attachments/assets/6f4c4c0e-06f5-4306-b226-16b5c06d9614)
+![image](https://github.com/user-attachments/assets/65273fb7-e52d-4b31-88a6-ad1ad60fdeb0)
+
+然后先输入漫画需要保存到文件夹的名称，后输入所有可能的漫画译名（不分大小写）
+
+![image](https://github.com/user-attachments/assets/06bdbd3d-e394-4d4c-a7f7-37c3e55d0a50)
+
+最后再按需进行下载即可
+
+![image](https://github.com/user-attachments/assets/a37a674f-51c3-4a70-ac0a-f1485cceaf13)
+
