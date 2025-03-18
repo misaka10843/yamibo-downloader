@@ -4,6 +4,7 @@ import re
 import time
 from pathlib import Path
 
+from bs4 import BeautifulSoup
 from cbz.comic import ComicInfo
 from cbz.constants import PageType, YesNo, Manga, AgeRating, Format
 from cbz.page import PageInfo
@@ -91,6 +92,12 @@ def downloader(list):
             log.error(f"获取帖子信息失败，ID：{id}，返回：{response.content}")
             console.print(f"[bold red]无法获取此信息，请稍后手动下载对应章节(章节话数为每话下载输出的帖子ID)[/]")
             break
+        soup = BeautifulSoup(response.text, "html.parser")
+        if soup.find("div", id="messagetext", class_="alert_info"):
+            log.warning("出现bbs拦截")
+            with console.status("[bold yellow]抱歉，bbs拦截请求，正在等待10秒重试中..."):
+                time.sleep(10)
+                response = request.get(url)
         log.info(f"获取帖子信息成功，ID：{id}，返回：{response.content}")
         data = response.json()['Variables']['postlist'][0]
 
